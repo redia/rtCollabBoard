@@ -35,7 +35,7 @@ module.exports = function (grunt) {
     },
     express: {
       options: {
-        port: process.env.PORT || 9000
+        port: process.env.PORT || 443
       },
       dev: {
         options: {
@@ -93,7 +93,7 @@ module.exports = function (grunt) {
           '<%= yeoman.client %>/assets/images/{,*//*}*.{png,jpg,jpeg,gif,webp,svg}'
         ],
         options: {
-          livereload: true
+          livereload: false
         }
       },
       express: {
@@ -102,8 +102,8 @@ module.exports = function (grunt) {
         ],
         tasks: ['express:dev', 'wait'],
         options: {
-          livereload: true,
-          nospawn: true //Without this option specified express won't be reloaded
+          livereload: false,
+          nospawn: false //Without this option specified express won't be reloaded
         }
       }
     },
@@ -190,7 +190,7 @@ module.exports = function (grunt) {
         options: {
           nodeArgs: ['--debug-brk'],
           env: {
-            PORT: process.env.PORT || 9000
+            PORT: process.env.PORT || 443
           },
           callback: function (nodemon) {
             nodemon.on('log', function (event) {
