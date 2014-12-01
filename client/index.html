@@ -1,75 +1,187 @@
-<!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <base href="/">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(client) app/vendor.css -->
-      <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-      <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
-      <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css({.tmp,client}) app/app.css -->
-    <link rel="stylesheet" href="app/app.css">
-      <!-- injector:css -->
-      <link rel="stylesheet" href="app/app.css">
-      <link rel="stylesheet" href="app/main/main.css">
-      <link rel="stylesheet" href="components/modal/modal.css">
-      <!-- endinjector -->
-    <!-- endbuild -->
-  </head>
-  <body ng-app="rtCollabBoardApp">
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+<!!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <title>Realtime Task Board</title>
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Sans&amp;subset=latin">
+  <link rel="stylesheet" href="bower_components/bootstrap/docs/assets/css/bootstrap.css">
+  <link rel="stylesheet" href="app/app.css">
+  <link rel="stylesheet" href="bower_components/angularjs-toaster/toaster.css">
+  <link rel="stylesheet" href="app/youtube-player.css">
+  <link rel="stylesheet" href="app/farbtastic.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="bower_components/jquery/jquery.min.js"></script>
+  <script src="bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+  <script src="bower_components/swfobject/swfobject/swfobject.js"></script>
+  <script src="bower_components/fingerprint/fingerprint.js"></script>
+  <script src="bower_components/angularjs-toaster/toaster.js"></script>
+  <script src='bower_components/webtoolkit.base64/base64.js'></script>
+  <script src='bower_components/html2canvas/build/html2canvas.min.js'></script>
+  <script src='bower_components/jquery.pep/dist/jquery.pep.min.js'></script>
+  <script src="bower_components/rtcmulticonnection/RTCMultiConnection.min.js"></script>
+  <script src="app/jquery.youtube.player.js"></script>
+  <script src="app/collab-board.js"></script>
+  <script src='app/paper.js'></script>
+  <script src='app/jquery_browser.js'></script>
+  <script src='app/farbtastic.js'></script>
+  <script src='app/draw.js' type="text/paperscript" canvas="myCanvas"></script>
+  <script>document.domain = document.domain;</script>
+</head>
+<body ng-controller="MainCtrl" ng-show="isShow">
+<div id="editbar" class="toolbar">
+  <div id="overlay">
+    <div id="overlay-inner">
+    </div>
+  </div>
+  <ul class="menu_left">
+    <input id="ytURL" ng-model="movieVal" type="text" class="title" placeholder="유투브 url 입력후 엔터" style="height:27px;margin: 0 0 0 7px;" movie-url-sender>
+    <!-- paint brush -->
+    <li class="acl-write" data-key="draw">
+      <a class="grouped-left" data-l10n-id="draw.toolbar.draw.title" id="drawTool">
+        <span class="buttonicon buttonicon-draw"></span>
+      </a>
+    </li>
+    <!-- pencil brush -->
+    <li class="acl-write" data-key="pencil">
+      <a class="grouped-middle" data-l10n-id="draw.toolbar.pencil.title" id="pencilTool">
+        <span class="buttonicon buttonicon-pencil"></span>
+      </a>
+    </li>
+    <!-- ColorPicker -->
+    <li class="acl-write"  data-key="showusers">
+      <a class="grouped-middle" data-l10n-id="draw.toolbar.showusers.title" id="usericon">
+        <span class="buttonicon buttonicon-color_picker"></span>
+      </a>
+    </li>
+    <!-- Select Tool -->
+    <li class="acl-write" data-key="select">
+      <a class="grouped-middle" data-l10n-id="draw.toolbar.select.title" id="selectTool">
+        <span class="buttonicon buttonicon-select"></span>
+      </a>
+    </li>
+    <!-- Note -->
+    <li class="acl-write">
+      <a class="grouped-middle">
+        <span class="buttonicon buttonicon-note" id="createButton" ng-click="createNote()"></span>
+      </a>
+    </li>
+    <!-- Upload -->
+    <li class="acl-write"  data-key="upload">
+      <a class="grouped-middle" data-l10n-id="draw.toolbar.upload.title" id="uploadImage">
+        <span class="buttonicon buttonicon-upload"></span>
+      </a>
+      <!-- ScreenSharing -->
+    <li class="acl-write"  data-key="screen">
+      <a class="grouped-right" data-l10n-id="draw.toolbar.screen.title" id="screeShare">
+        <span class="buttonicon buttonicon-screen"></span>
+      </a>
+    </li>
 
-    <!-- Add your site or application content here -->
-    <div ng-view=""></div>
-
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-XXXXX-X');
-      ga('send', 'pageview');
-    </script>
-
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
-    <!-- build:js({client,node_modules}) app/vendor.js -->
-      <!-- bower:js -->
-      <script src="bower_components/jquery/dist/jquery.js"></script>
-      <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/angular-resource/angular-resource.js"></script>
-      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-      <script src="bower_components/angular-route/angular-route.js"></script>
-      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-      <!-- endbower -->
-    <!-- endbuild -->
-
-        <!-- build:js({.tmp,client}) app/app.js -->
-        <script src="app/app.js"></script>
-          <!-- injector:js -->
-          <script src="app/main/main.controller.js"></script>
-          <script src="app/main/main.js"></script>
-          <script src="components/modal/modal.service.js"></script>
-          <script src="components/navbar/navbar.controller.js"></script>
-          <!-- endinjector -->
-        <!-- endbuild -->
+  </ul>
+  <ul class="menu_right">
+    <!-- settings -->
+    <li data-key="settings">
+      <a id="settingslink" class="grouped-left" data-l10n-id="draw.toolbar.settings.title">
+        <span class="grouped-left buttonicon buttonicon-settings"></span>
+      </a>
+    </li>
+    <!-- import export -->
+    <li data-key="import_export">
+      <a id="importExport" class="grouped-right" data-l10n-id="draw.toolbar.import_export.title">
+        <span class="buttonicon buttonicon-import_export"></span>
+      </a>
+    </li>
+    <!-- user stuff -->
+    <li class="separator"></li>
+    <li>
+      <a>
+        <span class="buttonicon buttonicon-showusers"></span>
+        <span id="online_count">1</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="settings" class="popup">
+  <h1 data-l10n-id="draw.settings.padSettings"></h1>
+  <div class="column">
+    <h2 data-l10n-id="draw.settings.ClearCanvas">전체 지우기</h2>
+    <a>정말 전체를 지우시겠습니까?</a>
+    <div><button id="clearCanvas">OK</button></div>
+  </div>
+</div>
+<div id="embed" class="popup">
+  <h1 data-l10n-id="draw.share">Share & Embed</h1>
+  <div id="linkcode">
+    <h2 data-l10n-id="draw.share.link">Share</h2>
+    <input id="linkinput" type="text" value="">
+  </div>
+  <br>
+  <div id="embedcode">
+    <h2 data-l10n-id="draw.share.emebdcode">Embed</h2>
+    <input id="embedinput" type="text" value="">
+  </div>
+</div>
+<div id="settings" class="popup">
+  <h1 data-l10n-id="draw.settings.padSettings">Settings</h1>
+  <div class="column">
+    <h2 data-l10n-id="draw.settings.myView"></h2>
+  </div>
+</div>
+<div id="importexport" class="popup">
+  <h1 data-l10n-id="draw.importExport.import_export">내보내기</h1>
+  <div class="column">
+    <h2 data-l10n-id="draw.importExport.export"></h2>
+    <div>
+      <a id="exportSVG" target="_blank" class="exportlink">SVG로 내보내기</a>
+    </div>
+    <div>
+      <a id="exportPNG" target="_blank" class="exportlink">PNG로 내보내기</a>
+    </div>
+  </div>
+</div>
+<div id="lostConnection" class="hidden">
+  <p>
+    Lost connection to the server! Please refresh this page.
+  </p>
+</div>
+<div id="loading" class="hidden" style="display:block;">
+  <p>
+    Loading...
+  </p>
+</div>
+<input type="file" id="imageInput" accept="image/*"/>
+<div id="activeColorSwatch">
+</div>
+<div id="canvasContainer">
+  <div id="videos-container" style="width: 800px;height: 800px"></div>
+  <canvas id="myCanvas" resize="true"></canvas>
+  <div id="mycolorpicker">
+    <div id="colorpickerMover">
+    </div>
+    <div id="colorpicker">
+    </div>
+    <div id="opacity">
+      <div id="opacityLabel">
+        투명도
+      </div>
+      <input type="range" min="0" max="255" value="200" id="opacityRangeVal">
+    </div>
+  </div>
+</div>
+<toaster-container toaster-options="{'time-out': 6000}"></toaster-container>
+<div sticky-note ng-repeat="note in notes" note="note" class="alert alert-block sticky-note" ondelete="deleteNote(id)" style="display:none">
+  <button type="button" class="close" ng-click="deleteNote(note.id)">&times;</button>
+  <textarea ng-model="note.body" ng-change="updateNote(note)" placeholder="글을 입력해 주세요" ng-auto-expand>{{note.body}}</textarea>
+</div>
+<div class="youtube-player" sticky-movie movie="movie" style="margin-left:-9999px;">
+  <div class="youtube-player-video">
+    <div class="youtube-player-object">
+    </div>
+  </div>
+</div>
 </body>
 </html>
