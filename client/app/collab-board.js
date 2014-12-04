@@ -1,5 +1,5 @@
 var app = angular.module('app', ['toaster']);
-
+var connection_file = new RTCMultiConnection('sma79');
 app.directive('stickyNote', function(socket) {
 	var linker = function(scope, element, attrs) {
 			element.draggable({
@@ -298,10 +298,15 @@ app.controller('MainCtrl', function($scope, socket, toaster) {
 		minFrameRate: 60
 	};
 	connection.session = {
-		screen: true,
-		oneway: true
-	};
-	connection.onstream = function(e) {
+    screen: true,
+    oneway: true
+  };
+
+  connection_file.session = {
+    data: true
+  };
+
+  connection.onstream = function(e) {
 		e.mediaElement.width = 600;
 		videosContainer.insertBefore(e.mediaElement, videosContainer.firstChild);
 		rotateVideo(e.mediaElement);
@@ -325,7 +330,22 @@ app.controller('MainCtrl', function($scope, socket, toaster) {
 		}, 1000);
 	};
 
-	connection.onNewSession = function(session) {
+  connection.connect();
+  connection_file.connect('channel');
+
+  document.getElementById('fileInput').onchange = function() {
+    var file = this.files[0];
+    connection_file.send(file);
+  };
+
+  connection_file.body = document.getElementById('file-progress');
+  connection_file.onopen = function(){
+    document.getElementById('fileShareLi').style.display = 'block';
+    document.getElementById('file-progress').innerHTML = "우측 2번째 버튼을 누르시면 파일 공유가 가능합니다";
+  };
+
+
+  connection.onNewSession = function(session) {
 		//if (sessions[session.sessionid]) return;
 		sessions[session.sessionid] = session;
 
@@ -335,7 +355,7 @@ app.controller('MainCtrl', function($scope, socket, toaster) {
 		session.join();
 	};
 
-	$('#screeShare').on('click', function() {
+  $('#screeShare').on('click', function() {
 		connection.extra = {
 			'session-name': 'redia90'
 		};
@@ -348,9 +368,8 @@ app.controller('MainCtrl', function($scope, socket, toaster) {
 		connection.open();
 	});
 		// setup signaling to search existing sessions
-	connection.connect();
 
-	function scaleVideos() {
+  function scaleVideos() {
 		var videos = document.querySelectorAll('video'),
 			length = videos.length,
 			video;

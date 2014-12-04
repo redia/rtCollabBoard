@@ -227,7 +227,7 @@ video {
 	height:50px
 }
 .buttonicon {
-	width:16px;
+	width:17px;
 	height:16px;
 	background-image:url('/assets/images/etherpad_lite_icons.png');
 	background-repeat:no-repeat;
@@ -272,6 +272,10 @@ video {
 .buttonicon-showusers {
 	background-position:0px -183px;
 }
+.buttonicon-file{
+  background-position:0px -323px
+}
+
 .buttonicon-screen{
 	background-position:0px -462px
 }

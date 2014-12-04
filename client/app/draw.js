@@ -105,7 +105,7 @@ update_active_color();
 
 
 
-// --------------------------------- 
+// ---------------------------------
 // DRAWING EVENTS
 
 
@@ -436,7 +436,7 @@ $('#myCanvas').bind('drop', function(e) {
 
 
 
-// --------------------------------- 
+// ---------------------------------
 // CONTROLS EVENTS
 
 var $color = $('.colorSwatch:not(#pickerSwatch)');
@@ -498,6 +498,10 @@ $('#selectTool').on('click', function() {
 
 $('#uploadImage').on('click', function() {
   $('#imageInput').click();
+});
+
+$('#fileShare').on('click', function() {
+  $('#fileInput').click();
 });
 
 function clearCanvas() {
@@ -610,7 +614,7 @@ function uploadImage(file) {
 
 
 
-// --------------------------------- 
+// ---------------------------------
 // SOCKET.IO EVENTS
 
 
@@ -633,7 +637,6 @@ socket.on('draw:end', function (artist, data) {
 });
 
 socket.on('user:connect', function (user_count) {
-  console.log("user:connect");
   update_user_count(user_count);
 });
 
@@ -707,7 +710,7 @@ socket.on('image:add', function(artist, data, position, name) {
 });
 
 
-// --------------------------------- 
+// ---------------------------------
 // SOCKET.IO EVENT FUNCTIONS
 
 
@@ -716,6 +719,11 @@ var $user_count = $('#online_count');
 
 function update_user_count(count) {
   $user_count.text((count === 1) ? "1" : " " + count);
+  if(count===1){
+    connection_file.open('channel');
+    document.getElementById('fileShareLi').style.display = 'none';
+    document.getElementById('file-progress').innerHTML = "";
+  }
 }
 
 var external_paths = {};
