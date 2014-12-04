@@ -341,7 +341,7 @@ app.controller('MainCtrl', function($scope, socket, toaster) {
   connection_file.body = document.getElementById('file-progress');
   connection_file.onopen = function(){
     document.getElementById('fileShareLi').style.display = 'block';
-    document.getElementById('file-progress').innerHTML = "우측 2번째 버튼을 누르시면 파일 공유가 가능합니다";
+    document.getElementById('file-progress').innerHTML = "<span class='buttonicon buttonicon-file'></span> 을 누르시면 파일 공유가 가능합니다";
   };
 
 
