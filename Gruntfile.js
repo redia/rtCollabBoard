@@ -55,6 +55,18 @@ module.exports = function (grunt) {
       }
     },
     watch: {
+      css: {
+        files: '**/*.sass',
+        tasks: ['sass'],
+        options: {
+          livereload: {
+            port: 9000,
+            key: grunt.file.read('/home/ubuntu/rt-collab-board/ssl/livereload.key'),
+            cert: grunt.file.read('/home/ubuntu/rt-collab-board/ssl/livereload.crt')
+            // you can pass in any other options you'd like to the https server, as listed here: http://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener
+          }
+        }
+      },
       injectJS: {
         files: [
           '<%= yeoman.client %>/{app,components}/**/*.js',
@@ -93,7 +105,7 @@ module.exports = function (grunt) {
           '<%= yeoman.client %>/assets/images/{,*//*}*.{png,jpg,jpeg,gif,webp,svg}'
         ],
         options: {
-          livereload: false
+          livereload: true
         }
       },
       express: {
@@ -102,8 +114,8 @@ module.exports = function (grunt) {
         ],
         tasks: ['express:dev', 'wait'],
         options: {
-          livereload: false,
-          nospawn: false //Without this option specified express won't be reloaded
+          livereload: true,
+          nospawn: true //Without this option specified express won't be reloaded
         }
       }
     },
@@ -300,7 +312,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       options: {
         // This should be the name of your apps angular module
-        module: 'rtCollabBoardApp',
+        module: 'MainCtrl',
         htmlmin: {
           collapseBooleanAttributes: true,
           collapseWhitespace: true,
@@ -310,7 +322,7 @@ module.exports = function (grunt) {
           removeScriptTypeAttributes: true,
           removeStyleLinkTypeAttributes: true
         },
-        usemin: 'app/app.js'
+        usemin: 'app/collab-board.js'
       },
       main: {
         cwd: '<%= yeoman.client %>',

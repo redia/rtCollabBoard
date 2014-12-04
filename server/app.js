@@ -31,6 +31,8 @@ var db = require('./db.js');
 require('./config/express')(app);
 require('./routes')(app);
 
+var globalRoom = {};
+
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', function(socket) {
   socket.on('connected', function(data) {
@@ -75,6 +77,7 @@ io.sockets.on('connection', function(socket) {
     draw.endExternalPath(room, JSON.parse(co_ordinates), uid);
   });
   socket.on('subscribe', function(data) {
+    globalRoom = data;
     subscribe(socket, data);
   });
   socket.on('canvas:clear', function(room) {
@@ -102,7 +105,7 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in(room).emit('image:add', uid, data, position, name);
   });
   socket.on('disconnect', function() {
-
+    unsubscribe(socket, globalRoom);
   });
 });
 
@@ -122,6 +125,13 @@ function subscribe(socket, data) {
   var rooms = socket.adapter.rooms[room];
   var roomUserCount = Object.keys(rooms).length;
   io.to(room).emit('user:connect', roomUserCount);
+}
+
+function unsubscribe(socket, data) {
+  var room = data.room;
+  var rooms = socket.adapter.rooms[room];
+  var roomUserCount = Object.keys(rooms).length;
+  io.to(room).emit('user:disconnect', roomUserCount);
 }
 
 function loadFromMemory(room, socket) {
